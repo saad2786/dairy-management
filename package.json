@@ -13,9 +13,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.11",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.17",
+    "@tanstack/react-query": "^5.24.1",
+    "@tanstack/react-query-devtools": "^5.24.1",
     "axios": "^1.6.7",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "date-fns": "^3.3.1",
     "dotenv": "^16.4.5",
     "eslint": "^8.56.0",
     "eslint-config-react-app": "^7.0.1",
@@ -26,11 +33,13 @@
     "mssql": "^10.0.2",
     "nodemon": "^3.0.3",
     "react": "^18.2.0",
+    "react-datepicker": "^6.1.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.50.1",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.0.1",
     "react-router-dom": "^6.22.1",
+    "styled-components": "^6.1.8",
     "vite-eslint-plugin": "^1.9.2"
   },
   "devDependencies": {

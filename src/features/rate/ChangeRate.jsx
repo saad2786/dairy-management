@@ -1,9 +1,25 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import Spinner from "../../ui/Spinner";
+import SubmitButtton from "../../ui/SubmitButtton";
 
 export default function ChangeRate() {
-  const { isSubmitting, register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
+  const queryClient = useQueryClient();
+  const { mutate, status } = useMutation({
+    mutationFn: (data) => onSubmit(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["rates"] });
+
+      reset();
+    },
+    onError: () => {
+      toast.error("Something went wrong!");
+    },
+  });
+  const isChanging = status === "pending";
   async function onSubmit(data) {
     try {
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/rates/new`, {
@@ -29,13 +45,13 @@ export default function ChangeRate() {
     <div className="flex w-[80vw] flex-col items-center justify-center gap-10  py-10  ">
       <form
         className="flex w-full  flex-col items-center gap-10"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(mutate)}
       >
         <input
           className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
           type="number"
           step="0.01"
-          disabled={isSubmitting}
+          disabled={isChanging}
           required
           placeholder="Milk fat"
           id="fat"
@@ -44,7 +60,7 @@ export default function ChangeRate() {
           })}
         />
         <select
-          disabled={isSubmitting}
+          disabled={isChanging}
           required
           className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
           placeholder="Select Cattle"
@@ -58,18 +74,15 @@ export default function ChangeRate() {
           className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
           type="number"
           required
-          disabled={isSubmitting}
+          disabled={isChanging}
           placeholder="Rate(Price/Ltr)"
           id="quantity"
           {...register("rate", { required: "This field is required" })}
         />
 
-        <button
-          disabled={isSubmitting}
-          className="pb rounded-xl bg-blue-600 px-3 py-2 text-xl uppercase text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-opacity-65 sm:w-[35vw] "
-        >
-          Add Transaction
-        </button>
+        <SubmitButtton disabled={isChanging}>
+          {isChanging ? <Spinner /> : "Change Rate"}
+        </SubmitButtton>
       </form>
     </div>
   );

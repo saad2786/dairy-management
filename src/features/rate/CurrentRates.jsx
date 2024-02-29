@@ -5,12 +5,20 @@ import Table from "../../ui/Table";
 import TableHead from "../../ui/TableHead";
 import RateRow from "./RateRow";
 import { useGetRates } from "./useGetRates";
+import { useQuery } from "@tanstack/react-query";
 
 export default function CurrentRates() {
-  const { rates, isLoading } = useGetRates();
+  const {
+    data: rates = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["rates"],
+    queryFn: useGetRates,
+  });
+  console.log(rates);
   if (isLoading) return <Loader />;
-  if (!rates) return <ErrorMessage />;
-  if (!rates.length) return;
+  if (error || !rates) return <ErrorMessage />;
   return (
     <Table>
       <TableHead>
@@ -20,14 +28,14 @@ export default function CurrentRates() {
         <div className="w-[250px] text-center">Start Date</div>
       </TableHead>
       <ul>
-        {rates.map((transaction) => {
+        {rates?.map((rate) => {
           return (
             <RateRow
-              key={transaction.RATE_ID}
-              fat={transaction.FAT}
-              rate={transaction.RATE}
-              cattle={transaction.CATTLE_TYPE}
-              startDate={transaction.DATE_CURRENT}
+              key={rate.RATE_ID}
+              fat={rate.FAT}
+              rate={rate["PRICE/LTR"]}
+              cattle={rate.CATTLE_TYPE}
+              startDate={rate.DATE_CURRENT}
             />
           );
         })}

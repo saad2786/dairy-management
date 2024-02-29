@@ -1,5 +1,7 @@
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import CreateCustomer from "./features/customer/CreateCustomer";
 import NewTransaction from "./features/transaction/NewTransaction";
 import Bill from "./pages/Bill";
@@ -10,19 +12,30 @@ import Rate from "./pages/Rate";
 import Transaction from "./pages/Transaction";
 import AppLayout from "./ui/AppLayout";
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0,
+    },
+  },
+});
+
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/customer" element={<Customer />} />
             <Route path="/customer/new" element={<CreateCustomer />} />
+
             <Route path="/rate" element={<Rate />} />
             <Route path="/transaction" element={<Transaction />} />
             <Route path="/transaction/new" element={<NewTransaction />} />
             <Route path="/bill" element={<Bill />} />
+            <Route path="/bill/:customerId" element={<Bill />} />
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>
@@ -57,7 +70,7 @@ function App() {
           },
         }}
       />
-    </>
+    </QueryClientProvider>
   );
 }
 

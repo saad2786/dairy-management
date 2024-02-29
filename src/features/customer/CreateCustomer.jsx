@@ -2,11 +2,27 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Spinner from "../../ui/Spinner";
+import SubmitButtton from "../../ui/SubmitButtton";
 export default function CreateCustomer() {
-  const { register, handleSubmit, formState, reset } = useForm();
-  const { isSubmitting } = formState;
+  const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { mutate, status } = useMutation({
+    mutationFn: (data) => onSubmit(data),
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
+      toast.success("Successfully created new customer ");
+      navigate("/customer");
+      reset();
+    },
+    onError: () => {
+      toast.error("Something went wrong!");
+    },
+  });
+  const isCreating = status === "pending";
   async function onSubmit(data) {
     const res = await fetch(`${import.meta.env.VITE_BASE_URL}/customers/new`, {
       method: "POST",
@@ -21,13 +37,7 @@ export default function CreateCustomer() {
         cattle: data.cattle === "Buffelo" ? 0 : 1,
       }),
     });
-
-    if (res.ok) {
-      toast.success("Successfully created new customer ");
-      reset();
-    } else {
-      toast.error("Something went wrong!");
-    }
+    console.log(res);
   }
 
   return (
@@ -37,13 +47,13 @@ export default function CreateCustomer() {
       </h2>
       <form
         className="flex  flex-col items-center gap-10"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(mutate)}
       >
         <input
           className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
           type="text"
           required
-          disabled={isSubmitting}
+          disabled={isCreating}
           placeholder="Customer Name"
           id="name"
           {...register("name", { required: "This field is required" })}
@@ -51,7 +61,7 @@ export default function CreateCustomer() {
         <input
           className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
           type="text"
-          disabled={isSubmitting}
+          disabled={isCreating}
           required
           placeholder="Contact Number"
           id="phone"
@@ -68,7 +78,7 @@ export default function CreateCustomer() {
           })}
         />
         <select
-          disabled={isSubmitting}
+          disabled={isCreating}
           required
           className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
           placeholder="Select Cattle"
@@ -79,12 +89,9 @@ export default function CreateCustomer() {
           <option className="   text-base font-semibold">Cow</option>
         </select>
 
-        <button
-          disabled={isSubmitting}
-          className="pb rounded-xl bg-blue-600 px-3 py-2 text-xl uppercase text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-opacity-65 sm:w-[35vw]"
-        >
-          Create Customer
-        </button>
+        <SubmitButtton disabled={isCreating}>
+          {isCreating ? <Spinner /> : "Create Customer"}
+        </SubmitButtton>
       </form>
       <button
         className="mt-2 w-80 rounded-xl bg-green-600 px-3 py-2 text-xl uppercase text-white hover:bg-green-500 disabled:cursor-not-allowed disabled:bg-opacity-65"

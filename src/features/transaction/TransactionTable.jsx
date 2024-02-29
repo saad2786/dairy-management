@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../../ui/ErrorMessage";
 import Loader from "../../ui/Loader";
@@ -9,10 +10,17 @@ import TransactionRow from "./TransactionRow";
 import { useGetTransactions } from "./useGetTransactions";
 
 export default function TransactionTable() {
-  const { transactions, isLoading } = useGetTransactions();
+  const {
+    data: transactions,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["transactions"],
+    queryFn: useGetTransactions,
+  });
   const navigate = useNavigate();
   if (isLoading) return <Loader />;
-  if (!transactions) return <ErrorMessage />;
+  if (error) return <ErrorMessage />;
   return (
     <>
       <Table>
@@ -26,19 +34,25 @@ export default function TransactionTable() {
         </TableHead>
 
         <ul>
-          {transactions.map((transaction) => {
-            return (
-              <TransactionRow
-                key={transaction.ID}
-                id={transaction.ID}
-                customer={transaction.CUSTOMER_ID}
-                fat={transaction.FAT}
-                qty={transaction.QTY}
-                cattle={transaction.CATTLE_TYPE}
-                price={transaction.PRICE}
-              />
-            );
-          })}
+          {transactions.length ? (
+            transactions.map((transaction) => {
+              return (
+                <TransactionRow
+                  key={transaction.ID}
+                  id={transaction.ID}
+                  customer={transaction.CUSTOMER_ID}
+                  fat={transaction.FAT}
+                  qty={transaction.QTY}
+                  cattle={transaction.CATTLE_TYPE}
+                  price={transaction.PRICE}
+                />
+              );
+            })
+          ) : (
+            <p className="px-8 py-10 text-center">
+              There is no any transaction, make new transaction 👇
+            </p>
+          )}
         </ul>
       </Table>
       <button

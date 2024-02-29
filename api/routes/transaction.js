@@ -15,14 +15,9 @@ router.post("/", async (req, res) => {
 router.post("/new", async (req, res) => {
   try {
     const result = await dbOperation.createTransaction(req.body);
-    console.log(result);
-    if (result) {
-      res.status(200).send("Successfully created customer");
-    } else {
-      res.status(400).send("Inputs are invalid!");
-    }
+    res.status(200).json(result);
   } catch (err) {
-    res.status(500).send("Somthing went wrong!");
+    res.status(500).json(err);
   }
 });
 

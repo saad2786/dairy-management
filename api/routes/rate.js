@@ -5,8 +5,6 @@ router.post("/", async (req, res) => {
   const dairyId = req.body.dairyId;
   try {
     const result = await dbOperation.getRates(dairyId);
-    console.log(result);
-
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json("Somthing went wrong");

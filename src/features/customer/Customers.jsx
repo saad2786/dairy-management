@@ -7,12 +7,23 @@ import TableHead from "../../ui/TableHead";
 import Table from "../../ui/Table";
 import ShowButton from "../../ui/ShowButton";
 import ErrorMessage from "../../ui/ErrorMessage";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function Customers() {
-  const { customers, isLoading } = useGetCustomers();
+  // const customer = useGetCustomers();
+  // console.log(customer);
+
+  const {
+    data: customers,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["customers"],
+    queryFn: useGetCustomers,
+  });
 
   if (isLoading) return <Loader />;
-  if (!customers) return <ErrorMessage />;
+  if (error) return <ErrorMessage />;
   return (
     <>
       <Table>
@@ -40,7 +51,9 @@ export default function Customers() {
             })}
           </ul>
         ) : (
-          <p>There is no any customer, add new customer 👇</p>
+          <p className="px-8 py-10 text-center">
+            There is no any customer, add new customer 👇
+          </p>
         )}
       </Table>
 

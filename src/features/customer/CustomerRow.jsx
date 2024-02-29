@@ -1,8 +1,17 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import toast from "react-hot-toast";
 import TableRow from "../../ui/TableRow";
 
 export default function CustomerRow({ id, name, dairy, cattle, phone }) {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: handleDelete,
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
+    },
+  });
   async function handleDelete() {
     const res = await fetch(
       `${import.meta.env.VITE_BASE_URL}/customers/${id}`,
@@ -11,16 +20,14 @@ export default function CustomerRow({ id, name, dairy, cattle, phone }) {
       },
     );
     if (res.ok) {
-      toast.success(`Successfully Deleted ${name}`);
+      toast.success(`Successfully deleted ${name} `);
     } else {
-      const error = await res.json();
-      console.log(error);
-
       toast.error(
-        error ? "Delete all transactions first " : "Something went wrong!",
+        "You use this as reference, can't delete it until deleted from Others",
       );
     }
   }
+
   return (
     <TableRow>
       <div className="w-[80px] text-center">{id}</div>
@@ -30,7 +37,7 @@ export default function CustomerRow({ id, name, dairy, cattle, phone }) {
       <div className="w-[200px] text-center">{phone}</div>
       <button
         className="w-[100px] rounded-md bg-red-200 px-2 py-1 text-center text-xs  font-bold text-red-700 sm:text-base "
-        onClick={handleDelete}
+        onClick={mutate}
       >
         Delete
       </button>

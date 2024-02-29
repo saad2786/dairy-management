@@ -1,15 +1,28 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../../ui/Spinner";
+import SubmitButtton from "../../ui/SubmitButtton";
 
 export default function NewTransaction() {
-  const { isSubmitting, handleSubmit, register } = useForm();
+  const { handleSubmit, register, reset } = useForm();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { mutate, status } = useMutation({
+    mutationFn: (data) => onSubmit(data),
+    onSuccess: () => {
+      console.log(status);
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+    },
+  });
+  const isSubmitting = status === "pending";
   async function onSubmit(data) {
     try {
+      console.log(status);
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/transaction/new`,
+        `${import.meta.env.VITE_BASE_URL}/transactions/new`,
         {
           method: "POST",
           mode: "cors",
@@ -20,10 +33,14 @@ export default function NewTransaction() {
           body: JSON.stringify({ ...data, dairyId: 4 }),
         },
       );
-      if (res.ok) {
-        toast.success("Successfully added");
+      const newTransaction = await res.json();
+      console.log(newTransaction);
+      if (newTransaction === 5) {
+        toast.success("Successfully added new transaction ");
+        reset();
       } else {
-        toast.error("There is problem!");
+        toast.error("Invalid customer ID or cattle type ");
+        throw new Error("Invalid customer ID or cattle type ");
       }
     } catch (err) {
       console.log(err);
@@ -36,7 +53,7 @@ export default function NewTransaction() {
       </h2>
       <form
         className="flex  flex-col items-center gap-10"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(mutate)}
       >
         <input
           className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
@@ -80,18 +97,16 @@ export default function NewTransaction() {
           {...register("quantity", { required: "This field is required" })}
         />
 
-        <button
-          disabled={isSubmitting}
-          className="pb rounded-xl bg-blue-600 px-3 py-2 text-xl uppercase text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-opacity-65 sm:w-[35vw] "
-        >
-          Add Transaction
-        </button>
+        <SubmitButtton disabled={isSubmitting}>
+          {isSubmitting ? <Spinner /> : "Add Transactions"}
+        </SubmitButtton>
       </form>
       <button
         className="mt-2 w-80 rounded-xl bg-green-600 px-3 py-2 text-xl uppercase text-white hover:bg-green-500 disabled:cursor-not-allowed disabled:bg-opacity-65"
         onClick={() => navigate(-1)}
+        disabled={isSubmitting}
       >
-        See Transactions
+        Show Transctions
       </button>
     </div>
   );
