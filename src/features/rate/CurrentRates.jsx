@@ -4,19 +4,21 @@ import Loader from "../../ui/Loader";
 import Table from "../../ui/Table";
 import TableHead from "../../ui/TableHead";
 import RateRow from "./RateRow";
-import { useGetRates } from "./useGetRates";
+import { fetchRates } from "./fetchRates";
 import { useQuery } from "@tanstack/react-query";
+import { useAuthContext } from "../../context/useAuthContext";
 
 export default function CurrentRates() {
+  const { dairyId } = useAuthContext();
   const {
-    data: rates = [],
+    data: rates,
     isLoading,
     error,
   } = useQuery({
     queryKey: ["rates"],
-    queryFn: useGetRates,
+    queryFn: () => fetchRates(dairyId),
   });
-  console.log(rates);
+
   if (isLoading) return <Loader />;
   if (error || !rates) return <ErrorMessage />;
   return (
@@ -28,17 +30,23 @@ export default function CurrentRates() {
         <div className="w-[250px] text-center">Start Date</div>
       </TableHead>
       <ul>
-        {rates?.map((rate) => {
-          return (
-            <RateRow
-              key={rate.RATE_ID}
-              fat={rate.FAT}
-              rate={rate["PRICE/LTR"]}
-              cattle={rate.CATTLE_TYPE}
-              startDate={rate.DATE_CURRENT}
-            />
-          );
-        })}
+        {rates?.length ? (
+          rates?.map((rate) => {
+            return (
+              <RateRow
+                key={rate.RATE_ID}
+                fat={rate.FAT}
+                rate={rate["PRICE/LTR"]}
+                cattle={rate.CATTLE_TYPE}
+                startDate={rate.DATE_CURRENT}
+              />
+            );
+          })
+        ) : (
+          <p className="px-8 py-10 text-center">
+            There is no any rate, add rate👇
+          </p>
+        )}
       </ul>
     </Table>
   );

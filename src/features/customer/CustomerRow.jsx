@@ -3,7 +3,14 @@ import React from "react";
 import toast from "react-hot-toast";
 import TableRow from "../../ui/TableRow";
 
-export default function CustomerRow({ id, name, dairy, cattle, phone }) {
+export default function CustomerRow({
+  id,
+  name,
+  dairy,
+  cattle,
+  phone,
+  status,
+}) {
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: handleDelete,
@@ -35,12 +42,12 @@ export default function CustomerRow({ id, name, dairy, cattle, phone }) {
       <div className="w-[120px] text-center">{dairy}</div>
       <div className="w-[150px] text-center">{cattle ? "Cow" : "Buffelo"}</div>
       <div className="w-[200px] text-center">{phone}</div>
-      <button
-        className="w-[100px] rounded-md bg-red-200 px-2 py-1 text-center text-xs  font-bold text-red-700 sm:text-base "
+      <div
+        className={`w-[100px] rounded-md ${status ? "bg-green-200" : "bg-red-200"} px-2 py-1 text-center text-xs  font-bold ${status ? "text-green-700" : "text-red-700"}  sm:text-base`}
         onClick={mutate}
       >
-        Delete
-      </button>
+        {status ? "Active" : "Deactive"}
+      </div>
     </TableRow>
   );
 }

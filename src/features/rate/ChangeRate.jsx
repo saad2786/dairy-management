@@ -2,11 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useAuthContext } from "../../context/useAuthContext";
 import Spinner from "../../ui/Spinner";
 import SubmitButtton from "../../ui/SubmitButtton";
 
 export default function ChangeRate() {
   const { register, handleSubmit, reset } = useForm();
+  const { dairyId } = useAuthContext();
   const queryClient = useQueryClient();
   const { mutate, status } = useMutation({
     mutationFn: (data) => onSubmit(data),
@@ -29,7 +31,7 @@ export default function ChangeRate() {
           "Content-type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({ ...data, dairyId: 4 }),
+        body: JSON.stringify({ ...data, dairyId }),
       });
       if (res.ok) {
         toast.success("Rate milk changed successfully");

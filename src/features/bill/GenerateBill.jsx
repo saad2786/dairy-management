@@ -6,9 +6,11 @@ import Spinner from "../../ui/Spinner";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useAuthContext } from "../../context/useAuthContext";
 
 export default function GenerateBill({ setBills }) {
   const { register, handleSubmit, reset, control } = useForm();
+  const { dairyId } = useAuthContext();
   const { mutate, status } = useMutation({
     mutationFn: (data) => onSubmit(data),
     onError: () => {
@@ -26,7 +28,7 @@ export default function GenerateBill({ setBills }) {
           "Content-type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({ ...data, dairyId: 4 }),
+        body: JSON.stringify({ ...data, dairyId }),
       });
 
       const records = await res.json();

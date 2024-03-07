@@ -2,24 +2,25 @@ import React from "react";
 import Loader from "../../ui/Loader";
 import CustomerRow from "./CustomerRow";
 
-import { useGetCustomers } from "./useGetCustomers";
+import { fetchCustomers } from "./fetchCustomers";
 import TableHead from "../../ui/TableHead";
 import Table from "../../ui/Table";
 import ShowButton from "../../ui/ShowButton";
 import ErrorMessage from "../../ui/ErrorMessage";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { useAuthContext } from "../../context/useAuthContext";
 
 export default function Customers() {
   // const customer = useGetCustomers();
   // console.log(customer);
-
+  const { dairyId } = useAuthContext();
   const {
     data: customers,
     isLoading,
     error,
   } = useQuery({
     queryKey: ["customers"],
-    queryFn: useGetCustomers,
+    queryFn: () => fetchCustomers(dairyId),
   });
 
   if (isLoading) return <Loader />;
@@ -33,7 +34,7 @@ export default function Customers() {
           <div className="w-[120px] text-center">Dairy</div>
           <div className="w-fit text-center">Cattle Type</div>
           <div className="w-[200px] text-center">Phone</div>
-          <div className="w-[80px] text-center"></div>
+          <div className="w-[80px] text-center">Status</div>
         </TableHead>
         {customers.length ? (
           <ul>
@@ -46,6 +47,7 @@ export default function Customers() {
                   dairy={customer.DAIRY_ID}
                   cattle={customer.CATTLE_TYPE}
                   phone={customer.PHONE_NO}
+                  status={customer.STATUS}
                 />
               );
             })}

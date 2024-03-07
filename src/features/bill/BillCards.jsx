@@ -1,14 +1,12 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import toast from "react-hot-toast";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 export default function BillCards({ bills }) {
-  const queryClient = useQueryClient();
   const { mutate, status } = useMutation({
     mutationFn: handleUpdate,
     onSuccess: () => {
-      queryClient.invalidateQueries(["bills"]);
       toast.success("Successfully changed status");
     },
     onError: () => {
@@ -21,6 +19,11 @@ export default function BillCards({ bills }) {
         `${import.meta.env.VITE_BASE_URL}/bills/${bills[0].BILL_ID}`,
         {
           method: "PUT",
+          mode: "cors",
+          headers: {
+            "Content-type": "application/json",
+            Accept: "application/json",
+          },
         },
       );
       console.log(res);
@@ -28,7 +31,7 @@ export default function BillCards({ bills }) {
       console.log(err);
     }
   }
-  const isCreating = status === "pending";
+
   return (
     <>
       {bills?.map((bill) => {

@@ -2,19 +2,22 @@ const express = require("express");
 
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const useCustomer = require("./routes/customer");
-const useTransaction = require("./routes/transaction");
-const useRate = require("./routes/rate");
-const useBill = require("./routes/bill");
+const customerRouter = require("./routes/customer");
+const transactionRouter = require("./routes/transaction");
+const rateRouter = require("./routes/rate");
+const billRouter = require("./routes/bill");
+var authRouter = require("./routes/auth");
 const app = express();
 app.use(bodyParser.json());
 app.use(express.urlencoded());
 app.use(cors());
 
-app.use("/customers", useCustomer);
-app.use("/transactions", useTransaction);
-app.use("/rates", useRate);
-app.use("/bills", useBill);
+app.use("/customers", customerRouter);
+app.use("/transactions", transactionRouter);
+app.use("/rates", rateRouter);
+app.use("/bills", billRouter);
+app.use("/auth", authRouter);
+
 //* LISTEN
 app.listen(8000, () => {
   console.log("running on port 8000");

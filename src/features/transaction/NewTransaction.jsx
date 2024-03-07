@@ -3,11 +3,13 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../context/useAuthContext";
 import Spinner from "../../ui/Spinner";
 import SubmitButtton from "../../ui/SubmitButtton";
 
 export default function NewTransaction() {
   const { handleSubmit, register, reset } = useForm();
+  const { dairyId } = useAuthContext();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutate, status } = useMutation({
@@ -30,7 +32,7 @@ export default function NewTransaction() {
             "Content-type": "application/json",
             Accept: "application/json",
           },
-          body: JSON.stringify({ ...data, dairyId: 4 }),
+          body: JSON.stringify({ ...data, dairyId }),
         },
       );
       const newTransaction = await res.json();
@@ -72,8 +74,8 @@ export default function NewTransaction() {
           id="cattle"
           {...register("cattle")}
         >
-          <option className="   text-base font-semibold">Buffelo</option>
-          <option className="   text-base font-semibold">Cow</option>
+          <option className="text-base font-semibold">Buffelo</option>
+          <option className="text-base font-semibold">Cow</option>
         </select>
         <input
           className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"

@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const dbOperation = require("../../db/dbOperation");
+const dbOperation = require("../../db/dbOperations/dbRate");
 
 router.post("/", async (req, res) => {
   const dairyId = req.body.dairyId;

@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const dbOperation = require("../../db/dbOperation");
+const dbOperation = require("../../db/dbOperations/dbBill");
 
 // Create Bill
 router.post("/", async (req, res) => {
@@ -22,6 +22,7 @@ router.post("/", async (req, res) => {
 // Update Bill
 router.put("/:billId", async (req, res) => {
   const billId = req.params.billId;
+  console.log(billId);
   try {
     const result = await dbOperation.updateBill(billId);
     console.log(result);

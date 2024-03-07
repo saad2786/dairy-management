@@ -1,11 +1,12 @@
 const router = require("express").Router();
-const dbOperation = require("../../db/dbOperation");
+const dbOperation = require("../../db/dbOperations/dbTransaction");
 
 router.post("/", async (req, res) => {
   const dairyId = req.body.dairyId;
   try {
     const result = await dbOperation.getTransactions(dairyId);
     res.status(200).json(result);
+    console.log(result);
   } catch (err) {
     console.log(err);
   }

@@ -5,21 +5,20 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Spinner from "../../ui/Spinner";
 import SubmitButtton from "../../ui/SubmitButtton";
+import { useAuthContext } from "../../context/useAuthContext";
 export default function CreateCustomer() {
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { dairyId } = useAuthContext();
   const { mutate, status } = useMutation({
     mutationFn: (data) => onSubmit(data),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["customers"] });
-      toast.success("Successfully created new customer ");
+
       navigate("/customer");
       reset();
-    },
-    onError: () => {
-      toast.error("Something went wrong!");
     },
   });
   const isCreating = status === "pending";
@@ -33,11 +32,13 @@ export default function CreateCustomer() {
       },
       body: JSON.stringify({
         ...data,
-        dairyId: 4,
+        dairyId,
         cattle: data.cattle === "Buffelo" ? 0 : 1,
       }),
     });
-    console.log(res);
+    res.ok
+      ? toast.success("Successfully created new customer ")
+      : toast.error("Something went wrong!");
   }
 
   return (

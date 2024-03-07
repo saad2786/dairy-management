@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { useAuthContext } from "../../context/useAuthContext";
 
-export async function useGetRates() {
+export async function fetchRates(dairyId) {
   let data;
   try {
     const res = await fetch(`${import.meta.env.VITE_BASE_URL}/rates`, {
@@ -11,7 +12,7 @@ export async function useGetRates() {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        dairyId: 4,
+        dairyId,
       }),
     });
     data = await res.json();

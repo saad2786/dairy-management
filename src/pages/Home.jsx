@@ -1,6 +1,7 @@
 import React from "react";
-import Navbar from "../ui/Navbar";
+import { useAuthContext } from "../context/useAuthContext";
 
 export default function Home() {
-  return <div>Home</div>;
+  const { dairyId } = useAuthContext();
+  return <div>Home Page of Dairy with dairy id : {dairyId}</div>;
 }

@@ -1,22 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../context/useAuthContext";
 import ErrorMessage from "../../ui/ErrorMessage";
 import Loader from "../../ui/Loader";
 import Table from "../../ui/Table";
 import TableHead from "../../ui/TableHead";
 
 import TransactionRow from "./TransactionRow";
-import { useGetTransactions } from "./useGetTransactions";
+import { fetchTransactions } from "./fetchTransactions";
 
 export default function TransactionTable() {
+  const { dairyId } = useAuthContext();
   const {
     data: transactions,
     isLoading,
     error,
   } = useQuery({
     queryKey: ["transactions"],
-    queryFn: useGetTransactions,
+    queryFn: () => fetchTransactions(dairyId),
   });
   const navigate = useNavigate();
   if (isLoading) return <Loader />;
@@ -34,7 +36,7 @@ export default function TransactionTable() {
         </TableHead>
 
         <ul>
-          {transactions.length ? (
+          {transactions?.length ? (
             transactions.map((transaction) => {
               return (
                 <TransactionRow

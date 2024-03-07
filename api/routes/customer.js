@@ -1,8 +1,9 @@
 const router = require("express").Router();
-const dbOperation = require("../../db/dbOperation");
+const dbOperation = require("../../db/dbOperations/dbCustomer");
+
+//GET CUSTOMER
 router.post("/", async (req, res) => {
   const dairyId = req.body.dairyId;
-
   try {
     const result = await dbOperation.getCustomers(dairyId);
     res.status(200).json(result);
@@ -26,7 +27,7 @@ router.post("/new", async (req, res) => {
   }
 });
 
-//*DELETE CUSTOMER
+//*DECTIVATE CUSTOMER
 router.delete("/:customerId", async (req, res) => {
   const customerId = req.params.customerId;
   try {
