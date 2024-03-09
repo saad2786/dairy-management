@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useAuthContext } from "../../context/useAuthContext";
+import { useAuthContext } from "../../context/useContext";
 import Spinner from "../../ui/Spinner";
 import SubmitButtton from "../../ui/SubmitButtton";
 
@@ -44,13 +44,13 @@ export default function ChangeRate() {
   }
 
   return (
-    <div className="flex w-[80vw] flex-col items-center justify-center gap-10  py-10  ">
+    <div className="flex w-full flex-col items-center justify-center gap-10  py-10  ">
       <form
         className="flex w-full  flex-col items-center gap-10"
         onSubmit={handleSubmit(mutate)}
       >
         <input
-          className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-2 disabled:bg-opacity-65 sm:w-[40vw]"
           type="number"
           step="0.01"
           disabled={isChanging}
@@ -64,7 +64,7 @@ export default function ChangeRate() {
         <select
           disabled={isChanging}
           required
-          className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-2 disabled:bg-opacity-65 sm:w-[40vw]"
           placeholder="Select Cattle"
           id="cattle"
           {...register("cattle")}
@@ -73,7 +73,7 @@ export default function ChangeRate() {
           <option className="   text-base font-semibold">Cow</option>
         </select>
         <input
-          className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-2 disabled:bg-opacity-65 sm:w-[40vw]"
           type="number"
           required
           disabled={isChanging}

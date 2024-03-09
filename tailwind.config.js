@@ -5,8 +5,12 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: "Roboto Mono",
+        outfit: '"Outfit", sans-serif',
       },
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: ["winter"],
+  },
 };

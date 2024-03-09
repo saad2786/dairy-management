@@ -6,11 +6,13 @@ import Spinner from "../../ui/Spinner";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useAuthContext } from "../../context/useAuthContext";
+import { useAuthContext } from "../../context/useContext";
+import { useNavigate } from "react-router-dom";
 
 export default function GenerateBill({ setBills }) {
   const { register, handleSubmit, reset, control } = useForm();
   const { dairyId } = useAuthContext();
+  const navigate = useNavigate();
   const { mutate, status } = useMutation({
     mutationFn: (data) => onSubmit(data),
     onError: () => {
@@ -40,14 +42,14 @@ export default function GenerateBill({ setBills }) {
     }
   }
   return (
-    <div className="flex w-[80vw] flex-col items-center justify-center gap-10 py-10">
+    <div className="flex w-full flex-col items-center justify-center gap-10 py-10">
       <h2 className="font-semibold">Calculate Bill</h2>
       <form
         className="flex w-full flex-col items-center gap-10"
         onSubmit={handleSubmit(mutate)}
       >
         <input
-          className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-2 disabled:bg-opacity-65 sm:w-[40vw]"
           type="text"
           disabled={isCreating}
           required
@@ -73,6 +75,12 @@ export default function GenerateBill({ setBills }) {
           {isCreating ? <Spinner /> : "Get Bill"}
         </SubmitButtton>
       </form>
+      <button
+        className="btn btn-active  w-80 rounded-xl px-3 py-2 text-xl uppercase  disabled:cursor-not-allowed disabled:bg-opacity-65"
+        onClick={() => navigate("new")}
+      >
+        See Bills
+      </button>
     </div>
   );
 }

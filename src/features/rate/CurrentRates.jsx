@@ -1,12 +1,11 @@
 import React from "react";
 import ErrorMessage from "../../ui/ErrorMessage";
 import Loader from "../../ui/Loader";
-import Table from "../../ui/Table";
-import TableHead from "../../ui/TableHead";
+
 import RateRow from "./RateRow";
 import { fetchRates } from "./fetchRates";
 import { useQuery } from "@tanstack/react-query";
-import { useAuthContext } from "../../context/useAuthContext";
+import { useAuthContext } from "../../context/useContext";
 
 export default function CurrentRates() {
   const { dairyId } = useAuthContext();
@@ -22,14 +21,16 @@ export default function CurrentRates() {
   if (isLoading) return <Loader />;
   if (error || !rates) return <ErrorMessage />;
   return (
-    <Table>
-      <TableHead>
-        <div className="w-[100px] text-center">Cattle Type</div>
-        <div className="w-[100px] text-center">Fat</div>
-        <div className="w-[100px] text-center">Price/Ltr.</div>
-        <div className="w-[250px] text-center">Start Date</div>
-      </TableHead>
-      <ul>
+    <table className=" mx-auto table  max-h-[70vh] max-w-[60vw] overflow-scroll rounded-md border-t-2 shadow-sm shadow-slate-700">
+      <thead className="text-base  font-semibold shadow-sm shadow-slate-300">
+        <tr className="border-b border-slate-500 bg-slate-200">
+          <th>Cattle Type</th>
+          <th>Fat</th>
+          <th>Price/Ltr.</th>
+          <th>Start Date</th>
+        </tr>
+      </thead>
+      <tbody>
         {rates?.length ? (
           rates?.map((rate) => {
             return (
@@ -43,11 +44,11 @@ export default function CurrentRates() {
             );
           })
         ) : (
-          <p className="px-8 py-10 text-center">
+          <tr className="px-8 py-10 text-center">
             There is no any rate, add rate👇
-          </p>
+          </tr>
         )}
-      </ul>
-    </Table>
+      </tbody>
+    </table>
   );
 }

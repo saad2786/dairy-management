@@ -1,7 +1,6 @@
-import { useAuthContext } from "../../context/useAuthContext";
-
 export async function fetchCustomers(dairyId) {
   let data;
+
   try {
     const res = await fetch(`${import.meta.env.VITE_BASE_URL}/customers`, {
       method: "POST",

@@ -1,6 +1,19 @@
 const router = require("express").Router();
 const dbOperation = require("../../db/dbOperations/dbBill");
 
+//Get All bills
+router.get("/:dairyId", async (req, res) => {
+  const dairyId = req.params.dairyId;
+
+  try {
+    const result = await dbOperation.getBills(dairyId);
+    res.status(200).json(result);
+    console.log(result);
+  } catch (err) {
+    res.status(500).send("Internal Server Error!");
+  }
+});
+
 // Create Bill
 router.post("/", async (req, res) => {
   try {

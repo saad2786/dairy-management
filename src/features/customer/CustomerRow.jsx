@@ -36,18 +36,20 @@ export default function CustomerRow({
   }
 
   return (
-    <TableRow>
-      <div className="w-[80px] text-center">{id}</div>
-      <div className="w-[250px] text-center">{name}</div>
-      <div className="w-[120px] text-center">{dairy}</div>
-      <div className="w-[150px] text-center">{cattle ? "Cow" : "Buffelo"}</div>
-      <div className="w-[200px] text-center">{phone}</div>
-      <div
-        className={`w-[100px] rounded-md ${status ? "bg-green-200" : "bg-red-200"} px-2 py-1 text-center text-xs  font-bold ${status ? "text-green-700" : "text-red-700"}  sm:text-base`}
-        onClick={mutate}
-      >
-        {status ? "Active" : "Deactive"}
-      </div>
-    </TableRow>
+    <tr>
+      <td>{id}</td>
+      <td>{name}</td>
+      <td>{dairy}</td>
+      <td>{cattle ? "Cow" : "Buffelo"}</td>
+      <td>{phone}</td>
+      <td>
+        <button
+          className={` rounded-md ${status ? "bg-green-200" : "bg-red-200"} px-2 py-1 text-center text-xs  font-bold ${status ? "text-green-700" : "text-red-700"}  sm:text-base`}
+          onClick={mutate}
+        >
+          {status ? "Active" : "Deactive"}
+        </button>
+      </td>
+    </tr>
   );
 }

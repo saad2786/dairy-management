@@ -1,6 +1,18 @@
 const config = require("../dbConfig");
 const sql = require("mssql");
 
+const getBills = async (dairyId) => {
+  try {
+    let pool = await sql.connect(config);
+    const res = await pool
+      .request()
+      .query(`SELECT * FROM BILL WHERE DAIRY_ID = ${dairyId}`);
+    console.log(res);
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+};
 const createBill = async ({ fromDate, toDate, customerId, dairyId }) => {
   try {
     console.log(fromDate, toDate, customerId, dairyId);
@@ -34,4 +46,5 @@ const updateBill = async (billId) => {
 module.exports = {
   createBill,
   updateBill,
+  getBills,
 };

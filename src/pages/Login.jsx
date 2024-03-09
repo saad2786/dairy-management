@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useAuthContext } from "../context/useAuthContext";
+import { Context, DispatchContext } from "../context/useContext";
+import Spinner from "../ui/Spinner";
 
 export default function Login() {
-  const { setDairyId } = useAuthContext();
+  const dispatch = useContext(DispatchContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   async function handleLogin(e) {
@@ -16,6 +16,7 @@ export default function Login() {
     let data = { username, password };
 
     try {
+      setIsLoading(true);
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
         method: "POST",
         mode: "cors",
@@ -27,15 +28,90 @@ export default function Login() {
       });
       data = await res.json();
       const dairyId = data[0].DAIRY_ID;
-      setDairyId(dairyId);
+      const dairyName = data[0].DAIRY_NAME;
+      dispatch({
+        type: "authenticate",
+        payload: { dairyId, dairyName },
+      });
       sessionStorage.setItem("dairyId", dairyId);
+      sessionStorage.setItem("dairyName", dairyName);
+      setIsLoading(false);
       navigate("/");
     } catch (err) {
+      setIsLoading(false);
       console.log(err);
     }
   }
   return (
-    <div className="flex flex-col items-center justify-center gap-10 py-20">
+    <>
+      <div className="hero bg-base-200 min-h-screen">
+        <div className="hero-content flex-col lg:flex-row-reverse">
+          <div className="ml-4 text-center lg:text-left">
+            <h1 className="text-5xl font-bold">Login now!</h1>
+            <p className="py-6 text-xl">
+              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
+              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
+              et a id nisi.
+            </p>
+          </div>
+          <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+            <form className="card-body" onSubmit={(e) => handleLogin(e)}>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Email</span>
+                </label>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  value={username}
+                  disabled={isLoading}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="input input-bordered"
+                  autoComplete="username"
+                  required
+                  autoFocus
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Password</span>
+                </label>
+                <input
+                  id="current-password"
+                  name="password"
+                  type="password"
+                  value={password}
+                  disabled={isLoading}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  required
+                  className="input input-bordered"
+                />
+                <label className="label">
+                  <a href="#" className="label-text-alt link link-hover">
+                    Forgot password?
+                  </a>
+                </label>
+              </div>
+              <div className="form-control mt-6">
+                <button
+                  type="submit"
+                  className="btn btn-success  disabled:cursor-not-allowed disabled:bg-opacity-65"
+                  disabled={isLoading}
+                >
+                  {isLoading ? <Spinner /> : "Login"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+{
+  /* <div className="flex flex-col items-center justify-center gap-10 py-20">
       <h1 className="text-2xl font-extrabold tracking-wider">Sign in</h1>
       <form
         onSubmit={(e) => handleLogin(e)}
@@ -80,6 +156,5 @@ export default function Login() {
         </button>
         {error && <p>{error}</p>}
       </form>
-    </div>
-  );
+    </div> */
 }

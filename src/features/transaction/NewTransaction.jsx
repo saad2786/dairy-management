@@ -3,7 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../context/useAuthContext";
+import { useAuthContext } from "../../context/useContext";
 import Spinner from "../../ui/Spinner";
 import SubmitButtton from "../../ui/SubmitButtton";
 
@@ -104,7 +104,7 @@ export default function NewTransaction() {
         </SubmitButtton>
       </form>
       <button
-        className="mt-2 w-80 rounded-xl bg-green-600 px-3 py-2 text-xl uppercase text-white hover:bg-green-500 disabled:cursor-not-allowed disabled:bg-opacity-65"
+        className="btn btn-active  w-80 rounded-xl px-3 py-2 text-xl uppercase  disabled:cursor-not-allowed disabled:bg-opacity-65"
         onClick={() => navigate(-1)}
         disabled={isSubmitting}
       >

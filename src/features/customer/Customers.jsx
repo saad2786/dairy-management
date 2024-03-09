@@ -1,19 +1,19 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Loader from "../../ui/Loader";
 import CustomerRow from "./CustomerRow";
 
 import { fetchCustomers } from "./fetchCustomers";
-import TableHead from "../../ui/TableHead";
-import Table from "../../ui/Table";
+
 import ShowButton from "../../ui/ShowButton";
 import ErrorMessage from "../../ui/ErrorMessage";
 import { useQuery } from "@tanstack/react-query";
-import { useAuthContext } from "../../context/useAuthContext";
+import { Context, DispatchContext } from "../../context/useContext";
 
 export default function Customers() {
-  // const customer = useGetCustomers();
-  // console.log(customer);
-  const { dairyId } = useAuthContext();
+  const dispatch = useContext(DispatchContext);
+  const { dairyId } = useContext(Context);
+
+  //React Query for fetching data
   const {
     data: customers,
     isLoading,
@@ -23,21 +23,37 @@ export default function Customers() {
     queryFn: () => fetchCustomers(dairyId),
   });
 
+  //Calcaulte customer details
+  useEffect(() => {
+    const customerDetails = {
+      totalCustomer: customers?.length,
+      activeCustomer: customers?.filter(
+        (customer) => customer?.STATUS && customer,
+      ).length,
+    };
+    dispatch({
+      type: "customer",
+      payload: customerDetails,
+    });
+  }, [customers, dispatch]);
+
   if (isLoading) return <Loader />;
   if (error) return <ErrorMessage />;
   return (
     <>
-      <Table>
-        <TableHead>
-          <div className="w-[80px] text-center">ID</div>
-          <div className="w-[220px] text-center">Name</div>
-          <div className="w-[120px] text-center">Dairy</div>
-          <div className="w-fit text-center">Cattle Type</div>
-          <div className="w-[200px] text-center">Phone</div>
-          <div className="w-[80px] text-center">Status</div>
-        </TableHead>
+      <table className=" table max-h-[70vh] w-full overflow-scroll rounded-md border-t-2 shadow-sm shadow-slate-700">
+        <thead className="text-base  font-semibold shadow-sm shadow-slate-300">
+          <tr className="border-b border-slate-500 bg-slate-200">
+            <th>ID</th>
+            <th>Name</th>
+            <th>Dairy</th>
+            <th>Cattle Type</th>
+            <th>Phone</th>
+            <th>Status</th>
+          </tr>
+        </thead>
         {customers.length ? (
-          <ul>
+          <tbody>
             {customers?.map((customer) => {
               return (
                 <CustomerRow
@@ -51,15 +67,15 @@ export default function Customers() {
                 />
               );
             })}
-          </ul>
+          </tbody>
         ) : (
           <p className="px-8 py-10 text-center">
             There is no any customer, add new customer 👇
           </p>
         )}
-      </Table>
+      </table>
 
-      <ShowButton>Add new Customer</ShowButton>
+      <ShowButton>+ Add Customer</ShowButton>
     </>
   );
 }

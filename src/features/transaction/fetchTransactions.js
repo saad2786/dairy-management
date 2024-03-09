@@ -1,4 +1,4 @@
-import { useAuthContext } from "../../context/useAuthContext";
+import { useAuthContext } from "../../context/useContext";
 
 export async function fetchTransactions(dairyId) {
   let data;
@@ -14,7 +14,7 @@ export async function fetchTransactions(dairyId) {
       body: JSON.stringify({ dairyId }),
     });
     data = await res.json();
-    console.log(data);
+
     data = await data.recordset;
   } catch (err) {}
   return data;

@@ -11,12 +11,13 @@ import Login from "./pages/Login";
 import Rate from "./pages/Rate";
 import Transaction from "./pages/Transaction";
 import AppLayout from "./ui/AppLayout";
-import { useAuthContext } from "./context/useAuthContext";
+import { useAuthContext } from "./context/useContext";
+import Bills from "./features/bill/Bills";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 0,
+      staleTime: 5,
     },
   },
 });
@@ -44,7 +45,7 @@ function App() {
             <Route path="/transaction" element={<Transaction />} />
             <Route path="/transaction/new" element={<NewTransaction />} />
             <Route path="/bill" element={<Bill />} />
-            <Route path="/bill/:customerId" element={<Bill />} />
+            <Route path="/bill/new" element={<Bills />} />
           </Route>
         </Routes>
       </BrowserRouter>
