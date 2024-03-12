@@ -1,17 +1,20 @@
 import React from "react";
-import { Link, NavLink, redirect, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/useContext";
+import { LuMilk } from "react-icons/lu";
 
 export default function Navbar() {
   const { dairyId } = useAuthContext();
   const navigate = useNavigate();
+
   return (
     <div
-      className="navbar bg-base-100 font-outfit z-50 shadow-lg
+      className="navbar z-50 bg-base-100 font-outfit shadow-lg
     "
     >
       <div className="flex-1">
         <Link to="/" className="btn btn-ghost text-xl">
+          <LuMilk size={25} />
           Milk Dairy
         </Link>
       </div>
@@ -33,6 +36,7 @@ export default function Navbar() {
             <NavLink to="rate">Rate</NavLink>
           </li>
         </ul>
+
         {dairyId !== null ? (
           <button
             className="btn btn-primary"

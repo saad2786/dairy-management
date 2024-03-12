@@ -49,7 +49,7 @@ export default function GenerateBill({ setBills }) {
         onSubmit={handleSubmit(mutate)}
       >
         <input
-          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-2 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[200px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-400 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[25vw]"
           type="text"
           disabled={isCreating}
           required
@@ -71,16 +71,18 @@ export default function GenerateBill({ setBills }) {
           name="toDate"
           disabled={isCreating}
         />
-        <SubmitButtton disabled={isCreating}>
-          {isCreating ? <Spinner /> : "Get Bill"}
-        </SubmitButtton>
+        <div className="flex items-center gap-4">
+          <SubmitButtton disabled={isCreating}>
+            {isCreating ? <Spinner /> : "Get Bill"}
+          </SubmitButtton>
+          <button
+            className="btn btn-active  w-40 rounded-xl px-3 py-2 text-base uppercase  disabled:cursor-not-allowed disabled:bg-opacity-65"
+            onClick={() => navigate("new")}
+          >
+            See Bills
+          </button>
+        </div>
       </form>
-      <button
-        className="btn btn-active  w-80 rounded-xl px-3 py-2 text-xl uppercase  disabled:cursor-not-allowed disabled:bg-opacity-65"
-        onClick={() => navigate("new")}
-      >
-        See Bills
-      </button>
     </div>
   );
 }

@@ -5,13 +5,9 @@ export const DispatchContext = createContext();
 
 export const ContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  const data = {
-    ...state,
-    inactiveCustomer: state.totalCustomer - state.activeCustomer,
-  };
 
   return (
-    <Context.Provider value={data}>
+    <Context.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
         {children}
       </DispatchContext.Provider>
@@ -23,17 +19,13 @@ const INITIAL_STATE = {
   dairyId: sessionStorage.getItem("dairyId"),
   dairyName: sessionStorage.getItem("dairyName"),
   totalCustomer: 0,
-  activeCustomer: 0,
-  paidCustomer: 0,
-  unpaidCustomer: 0,
+  totalTransaction: 0,
+  buffeloTransaction: 0,
+  cowTransaction: 0,
+  cowMilkPrice: 0,
+  buffeloMilkPrice: 0,
   todayTransactionsAmount: 0,
   todayTransactionQty: 0,
-  lastMonthBuffeloMilkQty: 0,
-  lastMonthCowMilkQty: 0,
-  highestFatBuffelo: 0,
-  highestFatCow: 0,
-  lowestFatBuffelo: Infinity,
-  lowestFatCow: Infinity,
 };
 
 function reducer(state, action) {
@@ -48,25 +40,23 @@ function reducer(state, action) {
       return {
         ...state,
         totalCustomer: action.payload.totalCustomer,
-        activeCustomer: action.payload.activeCustomer,
       };
     case "transaction":
       return {
         ...state,
         todayTransactionAmount: action.payload.todayTransactionAmount,
+        totalTransaction: action.payload.totalTransaction,
+        todayBuffeloMilk: action.payload.todayBuffeloMilk,
+        todayCowMilk: action.payload.todayCowMilk,
         todayTransactionQty: action.payload.todayTransactionQty,
-        lastMonthBuffeloMilkQty: action.payload.lastMonthBuffeloMilkQty,
-        lastMonthCowMilkQty: action.payload.lastMonthCowMilkQty,
-        highestFatBuffelo: action.payload.highestFatBuffelo,
-        lowestFatBuffelo: action.payload.lowestFatBuffelo,
-        highestFatCow: action.payload.highestFatCow,
-        lowestFatCow: action.payload.lowestFatCow,
+        buffeloTransaction: action.payload.buffeloTransaction,
+        cowTransaction: action.payload.cowTransaction,
       };
-    case "bill":
+    case "rate":
       return {
         ...state,
-        paidCustomer: action.payload.paidCustomer,
-        unpaidCustomer: action.payload.unpaidCustomer,
+        cowMilkPrice: action.payload.cowMilkPrice,
+        buffeloMilkPrice: action.payload.buffeloMilkPrice,
       };
     default:
       throw new Error("Unknown error: " + action.type);

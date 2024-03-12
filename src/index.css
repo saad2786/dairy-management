@@ -16,6 +16,11 @@ html,*{
  
 
 }
+.text-vertical{
+  writing-mode: vertical-rl;
+text-orientation: mixed;
+
+}
 
 ::-webkit-scrollbar {
   width: 0; /* width of the entire scrollbar */

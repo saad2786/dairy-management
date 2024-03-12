@@ -44,7 +44,7 @@ export default function Login() {
   }
   return (
     <>
-      <div className="hero bg-base-200 min-h-screen">
+      <div className="hero min-h-screen bg-base-200">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="ml-4 text-center lg:text-left">
             <h1 className="text-5xl font-bold">Login now!</h1>
@@ -54,7 +54,7 @@ export default function Login() {
               et a id nisi.
             </p>
           </div>
-          <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+          <div className="card w-full max-w-sm shrink-0 bg-base-100 shadow-2xl">
             <form className="card-body" onSubmit={(e) => handleLogin(e)}>
               <div className="form-control">
                 <label className="label">
@@ -88,11 +88,6 @@ export default function Login() {
                   required
                   className="input input-bordered"
                 />
-                <label className="label">
-                  <a href="#" className="label-text-alt link link-hover">
-                    Forgot password?
-                  </a>
-                </label>
               </div>
               <div className="form-control mt-6">
                 <button

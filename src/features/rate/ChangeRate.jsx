@@ -50,7 +50,7 @@ export default function ChangeRate() {
         onSubmit={handleSubmit(mutate)}
       >
         <input
-          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-2 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[200px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-400 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[25vw]"
           type="number"
           step="0.01"
           disabled={isChanging}
@@ -64,7 +64,7 @@ export default function ChangeRate() {
         <select
           disabled={isChanging}
           required
-          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-2 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[200px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-400 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[25vw]"
           placeholder="Select Cattle"
           id="cattle"
           {...register("cattle")}
@@ -73,7 +73,7 @@ export default function ChangeRate() {
           <option className="   text-base font-semibold">Cow</option>
         </select>
         <input
-          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-2 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[200px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-400 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[25vw]"
           type="number"
           required
           disabled={isChanging}
@@ -83,7 +83,7 @@ export default function ChangeRate() {
         />
 
         <SubmitButtton disabled={isChanging}>
-          {isChanging ? <Spinner /> : "Change Rate"}
+          {isChanging ? <Spinner /> : "Change"}
         </SubmitButtton>
       </form>
     </div>

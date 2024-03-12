@@ -6,19 +6,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Spinner from "../../ui/Spinner";
 import SubmitButtton from "../../ui/SubmitButtton";
 import { useAuthContext } from "../../context/useContext";
-export default function CreateCustomer() {
+export default function CreateCustomer({ closeModal }) {
   const { register, handleSubmit, reset } = useForm();
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { dairyId } = useAuthContext();
   const { mutate, status } = useMutation({
     mutationFn: (data) => onSubmit(data),
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["customers"] });
-
-      navigate("/customer");
       reset();
+      closeModal();
     },
   });
   const isCreating = status === "pending";
@@ -42,16 +39,14 @@ export default function CreateCustomer() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8  py-20  ">
-      <h2 className="mb-4 text-2xl font-extrabold tracking-wider  ">
-        Create New Customer
-      </h2>
+    <>
+      <h2 className="py-5 text-center">Create New Customer</h2>
       <form
         className="flex  flex-col items-center gap-10"
         onSubmit={handleSubmit(mutate)}
       >
         <input
-          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-2 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[200px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-400 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[25vw]"
           type="text"
           required
           disabled={isCreating}
@@ -60,7 +55,7 @@ export default function CreateCustomer() {
           {...register("name", { required: "This field is required" })}
         />
         <input
-          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-2 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[200px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-400 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[25vw]"
           type="text"
           disabled={isCreating}
           required
@@ -81,7 +76,7 @@ export default function CreateCustomer() {
         <select
           disabled={isCreating}
           required
-          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-2 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[200px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-400 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[25vw]"
           placeholder="Select Cattle"
           id="cattle"
           {...register("cattle")}
@@ -91,15 +86,9 @@ export default function CreateCustomer() {
         </select>
 
         <SubmitButtton disabled={isCreating}>
-          {isCreating ? <Spinner /> : "Create Customer"}
+          {isCreating ? <Spinner /> : "Create"}
         </SubmitButtton>
       </form>
-      <button
-        className="btn btn-active  w-80 rounded-xl px-3 py-2 text-xl uppercase  disabled:cursor-not-allowed disabled:bg-opacity-65"
-        onClick={() => navigate(-1)}
-      >
-        See Customers
-      </button>
-    </div>
+    </>
   );
 }

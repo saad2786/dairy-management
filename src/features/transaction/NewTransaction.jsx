@@ -1,16 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../context/useContext";
 import Spinner from "../../ui/Spinner";
 import SubmitButtton from "../../ui/SubmitButtton";
+import { Context } from "../../context/useContext";
 
-export default function NewTransaction() {
+export default function NewTransaction({ closeModal }) {
   const { handleSubmit, register, reset } = useForm();
-  const { dairyId } = useAuthContext();
-  const navigate = useNavigate();
+  const { dairyId } = useContext(Context);
   const queryClient = useQueryClient();
   const { mutate, status } = useMutation({
     mutationFn: (data) => onSubmit(data),
@@ -40,6 +38,7 @@ export default function NewTransaction() {
       if (newTransaction === 5) {
         toast.success("Successfully added new transaction ");
         reset();
+        closeModal();
       } else {
         toast.error("Invalid customer ID or cattle type ");
         throw new Error("Invalid customer ID or cattle type ");
@@ -49,16 +48,14 @@ export default function NewTransaction() {
     }
   }
   return (
-    <div className="flex flex-col items-center justify-center gap-10  py-20  ">
-      <h2 className="text-2xl font-extrabold tracking-wider  ">
-        Add New Transaction
-      </h2>
+    <>
+      <h2 className="py-5 text-center">Add Transaction</h2>
       <form
         className="flex  flex-col items-center gap-10"
         onSubmit={handleSubmit(mutate)}
       >
         <input
-          className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[200px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-400 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[25vw]"
           type="text"
           required
           disabled={isSubmitting}
@@ -69,7 +66,7 @@ export default function NewTransaction() {
         <select
           disabled={isSubmitting}
           required
-          className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-400 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[25vw]"
           placeholder="Select Cattle"
           id="cattle"
           {...register("cattle")}
@@ -78,7 +75,7 @@ export default function NewTransaction() {
           <option className="text-base font-semibold">Cow</option>
         </select>
         <input
-          className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-400 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[25vw]"
           type="number"
           step="0.01"
           disabled={isSubmitting}
@@ -90,7 +87,7 @@ export default function NewTransaction() {
           })}
         />
         <input
-          className="h-12 w-[300px] rounded-lg border-2 border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-500 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[40vw]"
+          className="h-12 w-[300px] rounded-lg border border-solid border-stone-700 px-2 py-3 text-base font-semibold ring-stone-400 focus:outline-none focus:ring-4 disabled:bg-opacity-65 sm:w-[25vw]"
           type="number"
           required
           disabled={isSubmitting}
@@ -100,16 +97,18 @@ export default function NewTransaction() {
         />
 
         <SubmitButtton disabled={isSubmitting}>
-          {isSubmitting ? <Spinner /> : "Add Transactions"}
+          {isSubmitting ? <Spinner /> : "Add"}
         </SubmitButtton>
       </form>
-      <button
+      {/* </form> */}
+      {/* <button
         className="btn btn-active  w-80 rounded-xl px-3 py-2 text-xl uppercase  disabled:cursor-not-allowed disabled:bg-opacity-65"
         onClick={() => navigate(-1)}
         disabled={isSubmitting}
       >
         Show Transctions
-      </button>
-    </div>
+      </button> */}
+    </>
+    // </div>
   );
 }

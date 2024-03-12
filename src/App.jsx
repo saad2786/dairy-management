@@ -40,10 +40,8 @@ function App() {
           >
             <Route path="/" element={<Home />} />
             <Route path="/customer" element={<Customer />} />
-            <Route path="/customer/new" element={<CreateCustomer />} />
             <Route path="/rate" element={<Rate />} />
             <Route path="/transaction" element={<Transaction />} />
-            <Route path="/transaction/new" element={<NewTransaction />} />
             <Route path="/bill" element={<Bill />} />
             <Route path="/bill/new" element={<Bills />} />
           </Route>
@@ -59,6 +57,7 @@ function App() {
           fontFamily: "monospace",
           padding: "20px",
           margin: "20px",
+          zIndex: "9999",
         }}
         toastOptions={{
           style: {

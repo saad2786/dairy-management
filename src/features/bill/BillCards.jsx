@@ -1,22 +1,25 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import toast from "react-hot-toast";
 import Card from "./Card";
 
 export default function BillCards({ bills }) {
+  const queryClient = useQueryClient();
   const { mutate: payBill } = useMutation({
     mutationFn: handleUpdate,
     onSuccess: () => {
       toast.success("Successfully changed status");
+      queryClient.invalidateQueries({ queryKey: ["bills"] });
     },
     onError: () => {
       toast.error("Status has not changed");
     },
   });
-  async function handleUpdate() {
+  async function handleUpdate(billId) {
     try {
+      console.log(bills);
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/bills/${bills[0].BILL_ID}`,
+        `${import.meta.env.VITE_BASE_URL}/bills/${billId}`,
         {
           method: "PUT",
           mode: "cors",
@@ -26,7 +29,6 @@ export default function BillCards({ bills }) {
           },
         },
       );
-      console.log(res);
     } catch (err) {
       console.log(err);
     }

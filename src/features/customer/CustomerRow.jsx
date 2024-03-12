@@ -10,6 +10,7 @@ export default function CustomerRow({
   cattle,
   phone,
   status,
+  isFetching,
 }) {
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
@@ -44,8 +45,9 @@ export default function CustomerRow({
       <td>{phone}</td>
       <td>
         <button
-          className={` rounded-md ${status ? "bg-green-200" : "bg-red-200"} px-2 py-1 text-center text-xs  font-bold ${status ? "text-green-700" : "text-red-700"}  sm:text-base`}
+          className={` rounded-md ${status ? "bg-green-200" : "bg-red-200"} px-2 py-1 text-center text-xs  font-bold ${status ? "text-green-700" : "text-red-700"}  disabled:cursor-not-allowed sm:text-base`}
           onClick={mutate}
+          disabled={isFetching}
         >
           {status ? "Active" : "Deactive"}
         </button>

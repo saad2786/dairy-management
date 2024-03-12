@@ -1,92 +1,52 @@
-import React, { useContext, useEffect } from "react";
-import { Context, DispatchContext } from "../context/useContext";
-import { useQuery } from "@tanstack/react-query";
-import { fetchCustomers } from "../features/customer/fetchCustomers";
-import { fetchTransactions } from "../features/transaction/fetchTransactions";
-import { useCalculateTransactionDetails } from "../features/transaction/transactionCalculate";
+import React from "react";
+import { PiUsersThreeFill } from "react-icons/pi";
+
 import Loader from "../ui/Loader";
 import ErrorMessage from "../ui/ErrorMessage";
 import { BiRupee } from "react-icons/bi";
+import { useDashBoard } from "../features/dashBoard/useDashBoard";
+import Clock from "../ui/Clock.jsx";
 
 export default function Home() {
-  const state = useContext(Context);
-  const dispatch = useContext(DispatchContext);
+  const { state, isFetching, customerError, transactionsError } =
+    useDashBoard();
   const {
-    dairyId,
     dairyName,
     totalCustomer,
-    activeCustomer,
-    todayTransactionsAmount,
-    paidCustomer,
-    unpaidCustomer,
+    todayTransactionAmount,
+    totalTransaction,
+    cowMilkPrice,
+    buffeloMilkPrice,
     todayTransactionQty,
-    lastMonthBuffeloMilkQty,
-    lastMonthCowMilkQty,
-    highestFatBuffelo,
-    highestFatCow,
-    lowestFatBuffelo,
-    lowestFatCow,
+    todayBuffeloMilk,
+    todayCowMilk,
+    buffeloTransaction,
+    cowTransaction,
   } = state;
-  //Customer Data
-  const {
-    data: customers,
-    isFetching: isFetchingCustomers,
-    error: customerError,
-  } = useQuery({
-    queryKey: ["customers"],
-    queryFn: () => fetchCustomers(dairyId),
-  });
-  //Transactions Data
-  const {
-    data: transactions,
-    isFetching: isFetchingTransactions,
-    error: transactionsError,
-  } = useQuery({
-    queryKey: ["transactions"],
-    queryFn: () => fetchTransactions(dairyId),
-  });
-  useEffect(() => {
-    const customerDetails = {
-      totalCustomer: customers?.length,
-      activeCustomer: customers?.filter(
-        (customer) => customer?.STATUS && customer,
-      ).length,
-    };
-    dispatch({
-      type: "customer",
-      payload: customerDetails,
-    });
-  }, [customers, dispatch]);
-  const isFetching = isFetchingCustomers || isFetchingTransactions;
-  const inactiveCustomer = totalCustomer - activeCustomer;
-  useCalculateTransactionDetails({ transactions });
+
   if (isFetching) return <Loader />;
   if (transactionsError || customerError) return <ErrorMessage />;
   return (
     <>
-      <div className="font-outfit grid h-[84vh] grid-cols-4 grid-rows-4 gap-4">
+      <div className="grid h-[84vh] grid-cols-4 grid-rows-4 gap-4 font-outfit">
         {/* First Row */}
         <div className="stats col-span-4 row-span-1 flex w-full items-center justify-between bg-gray-200 bg-opacity-60 bg-[url('/images/dairyFarm.jpg')] bg-cover bg-no-repeat px-4 py-1 shadow">
           <div className="stat">
-            <div className="w-fit rounded-md bg-slate-400 bg-opacity-50 px-4 py-2  backdrop-blur-sm *:text-slate-100">
+            <div className="w-fit rounded-md bg-slate-200 bg-opacity-70 px-4 py-4  backdrop-blur-sm *:text-slate-700">
               <div className="stat-title">Hello, Welcome</div>
               <div className="stat-value">{dairyName}</div>
-              <div className="stat-desc text-xl">ID: {dairyId}</div>
             </div>
           </div>
           <div className="stat ">
-            <div className="w-fit  rounded-md bg-slate-400 bg-opacity-50 px-4 py-3 text-slate-100 backdrop-blur-sm">
+            <div className="w-fit  rounded-md bg-slate-200 bg-opacity-70 px-4 py-3 text-slate-700 backdrop-blur-sm">
+              {/* <div className="stat-value ">
+                {12} : {30} : {40}
+              </div> */}
+              <span className="stat-value font-mono text-4xl">
+                <Clock />
+              </span>
               <div className="stat-value  text-2xl font-semibold">
                 {new Date().toDateString()}
-              </div>
-            </div>
-          </div>
-          <div className="stat ">
-            <div className="w-fit  rounded-md bg-slate-400 bg-opacity-50 px-4 py-3 backdrop-blur-sm *:text-slate-100">
-              <div className="stat-title">Today's Transactions</div>
-              <div className="stat-value flex items-center text-2xl font-semibold">
-                <BiRupee />
-                {todayTransactionsAmount}
               </div>
             </div>
           </div>
@@ -94,81 +54,108 @@ export default function Home() {
         <div className="stats bg-gray-200 p-4 shadow">
           <div className="stat">
             <div className="stat-title">Total Customers</div>
-            <div className="stat-value">{totalCustomer}</div>
-          </div>
-        </div>
-        <div className="stats bg-green-200 p-4 shadow">
-          <div className="stat">
-            <div className="stat-title">Active Customers</div>
-            <div className="stat-value">{activeCustomer}</div>
-          </div>
-        </div>
-        <div className="stats bg-red-200 p-4 shadow">
-          <div className="stat">
-            <div className="stat-title">Inactive Customers</div>
-            <div className="stat-value">{inactiveCustomer}</div>
+            <div className="stat-value flex items-center justify-between">
+              {totalCustomer} <PiUsersThreeFill />
+            </div>
           </div>
         </div>
         <div className="stats bg-gray-200 p-4 shadow">
           <div className="stat">
             <div className="stat-title">Total Transaction </div>
-            <div className="stat-value">
-              {todayTransactionQty}{" "}
+            <div className="stat-value flex items-baseline  gap-1">
+              {totalTransaction}
               <span className="text-xl font-light italic">Ltr</span>
+            </div>
+          </div>
+        </div>
+        <div className="stats bg-gray-200 p-4 shadow">
+          <div className="stat">
+            <div className="stat-title">Today's Trans</div>
+            <div className="stat-value flex items-baseline gap-1    py-2">
+              {todayTransactionQty}
+              <span className="text-lg font-light italic">Ltr</span>
+            </div>
+          </div>
+        </div>
+        <div className="stats bg-gray-200 p-4 shadow">
+          <div className="stat">
+            <div className="stat-title">Today's Revenue</div>
+            <div className="stat-value flex items-center ">
+              <BiRupee />
+              {todayTransactionAmount}
             </div>
           </div>
         </div>
 
         {/* Second Row */}
 
-        <div className="stats col-span-3 row-span-1 bg-gray-200 p-4 shadow">
+        <div className="stats relative col-span-3 row-span-1 bg-gray-200 p-4 shadow">
+          <div
+            className="text-vertical absolute left-0 top-0 h-full bg-red-500 px-2 py-4 text-center tracking-widest
+          text-white "
+          >
+            Buffelo
+          </div>
           <div className="stat place-items-center">
-            <div className="stat-title">Buffelo Milk </div>
+            <div className="stat-title">Total Milk </div>
             <div className="stat-value">
-              {lastMonthBuffeloMilkQty}{" "}
+              {buffeloTransaction}{" "}
               <span className="text-lg font-light italic">Ltr</span>
             </div>
           </div>
           <div className="stat place-items-center">
-            <div className="stat-title">Highest Fat</div>
-            <div className="stat-value">{highestFatBuffelo}</div>
+            <div className="stat-title">Today's Milk</div>
+            <div className="stat-value">
+              {todayBuffeloMilk}{" "}
+              <span className="text-lg font-light italic">Ltr</span>
+            </div>
           </div>
 
           <div className="stat place-items-center">
-            <div className="stat-title">Lowest Fat</div>
-            <div className="stat-value text-secondary">
-              {lowestFatBuffelo !== Infinity ? lowestFatBuffelo : 0}
+            <div className="stat-title">Price</div>
+            <div className="stat-value flex items-baseline gap-1 text-secondary">
+              {buffeloMilkPrice}
+              <span className="text-lg font-light italic">Rs/Ltr</span>
             </div>
           </div>
         </div>
         <div className="stats stats-vertical col-span-1 row-span-2 bg-gray-200 p-4 shadow">
           <div className="stat place-items-center">
-            <div className="stat-title">Bill Paid </div>
-            <div className="stat-value">{paidCustomer}</div>
+            <div className="stat-title">Buffelo Milk Price</div>
+            <div className="stat-value">{buffeloMilkPrice}</div>
           </div>
           <div className="stat place-items-center">
-            <div className="stat-title">Bill Pending</div>
-            <div className="stat-value">{unpaidCustomer}</div>
+            <div className="stat-title">Cow Milk Price</div>
+            <div className="stat-value">{cowMilkPrice}</div>
           </div>
         </div>
-        <div className="stats col-span-3 row-span-1 bg-gray-200 p-4 shadow">
+        <div className="stats relative col-span-3 row-span-1 bg-gray-200 p-4 shadow">
+          <div
+            className="text-vertical absolute left-0 top-0 h-full bg-green-500 px-2 py-4 text-center tracking-widest
+          text-white "
+          >
+            Cow
+          </div>
           <div className="stat place-items-center">
-            <div className="stat-title">Cow Milk </div>
+            <div className="stat-title">Total Milk </div>
             <div className="stat-value">
-              {lastMonthCowMilkQty}{" "}
+              {cowTransaction}{" "}
               <span className="text-lg font-light italic">Ltr</span>
             </div>
           </div>
           <div className="stat place-items-center">
-            <div className="stat-title">Highest Fat</div>
-            <div className="stat-value">{highestFatCow}</div>
+            <div className="stat-title">Today's Milk</div>
+            <div className="stat-value">
+              {todayCowMilk}{" "}
+              <span className="text-lg font-light italic">Ltr</span>
+            </div>
           </div>
 
           <div className="stat place-items-center">
-            <div className="stat-title">Lowest Fat</div>
-            <div className="stat-value text-secondary">
-              {" "}
-              {lowestFatCow !== Infinity ? lowestFatCow : 0}
+            <div className="stat-title">Price</div>
+            <div className="stat-value flex items-baseline gap-1 text-secondary">
+              {cowMilkPrice}
+              <span className="text-lg font-light italic">Rs/Ltr</span>
             </div>
           </div>
         </div>

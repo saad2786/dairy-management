@@ -1,30 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-
-import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../../ui/ErrorMessage";
 import Loader from "../../ui/Loader";
 
 import TransactionRow from "./TransactionRow";
-import { fetchTransactions } from "./fetchTransactions";
-import { useContext } from "react";
-import { Context } from "../../context/useContext";
-import { useCalculateTransactionDetails } from "./transactionCalculate";
+
+import NewTransaction from "./NewTransaction";
+import Modal from "../../ui/Modal";
+import { useTransaction } from "./useTransaction";
 
 export default function TransactionTable() {
-  const state = useContext(Context);
-  const navigate = useNavigate();
-  const { dairyId } = state;
-
-  const {
-    data: transactions,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["transactions"],
-    queryFn: () => fetchTransactions(dairyId),
-  });
-  useCalculateTransactionDetails({ transactions });
-  console.log(state);
+  const { openModal, closeModal, transactions, isLoading, error, isOpenModal } =
+    useTransaction();
 
   if (isLoading) return <Loader />;
   if (error) return <ErrorMessage />;
@@ -68,10 +53,15 @@ export default function TransactionTable() {
       </div>
       <button
         className=" btn btn-success mt-2   rounded-xl px-3 py-2 font-sans text-sm   capitalize disabled:cursor-not-allowed disabled:bg-opacity-65   sm:text-base"
-        onClick={() => navigate("new")}
+        onClick={openModal}
       >
         + Add Transaction
       </button>
+      {isOpenModal && (
+        <Modal closeModal={closeModal}>
+          <NewTransaction closeModal={closeModal} />
+        </Modal>
+      )}
     </>
   );
 }
