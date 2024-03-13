@@ -35,7 +35,7 @@ export default function BillCards({ bills }) {
   }
 
   return (
-    <div className="flex flex-wrap items-start justify-center gap-8">
+    <div className="mt-4 flex max-h-[80vh] w-full flex-wrap items-start   justify-center  gap-8 overflow-y-scroll py-4">
       {bills?.map((bill) => {
         return <Card key={bill.BILL_ID} bill={bill} payBill={payBill} />;
       })}

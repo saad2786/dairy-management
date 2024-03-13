@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function Sidebar() {
-  return <div className="h-[100%] w-1/4 bg-slate-700">Hello</div>;
+export default function Sidebar({ children }) {
+  return <div className="col-span-1  bg-slate-300 px-4 py-4">{children}</div>;
 }

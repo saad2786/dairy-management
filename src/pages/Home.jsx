@@ -27,7 +27,7 @@ export default function Home() {
   if (isFetching) return <Loader />;
   if (transactionsError || customerError) return <ErrorMessage />;
   return (
-    <>
+    <div className="h-ful w-full px-20 py-8">
       <div className="grid h-[84vh] grid-cols-4 grid-rows-4 gap-4 font-outfit">
         {/* First Row */}
         <div className="stats col-span-4 row-span-1 flex w-full items-center justify-between bg-gray-200 bg-opacity-60 bg-[url('/images/dairyFarm.jpg')] bg-cover bg-no-repeat px-4 py-1 shadow">
@@ -160,6 +160,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
